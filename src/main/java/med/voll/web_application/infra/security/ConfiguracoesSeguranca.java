@@ -2,6 +2,7 @@ package med.voll.web_application.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -47,6 +48,9 @@ public class ConfiguracoesSeguranca {
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll())
+                .rememberMe(rememberMe -> rememberMe.key("lembrarDeMim")
+                        .alwaysRemember(true))
+                .csrf(Customizer.withDefaults())
                 .build();
     }
 }
