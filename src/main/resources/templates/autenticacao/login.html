@@ -16,13 +16,13 @@
             <form method="post" action="#" th:action="@{/login}">
                 <div class="alert alert-danger text-center text-uppercase" th:if="${param.error != null}">
                     <p>
-                        <i class="material-icons">&#xE000;</i><strong>Dados inválidos!</strong>
+                        <strong>Dados inválidos!</strong>
                     </p>
                 </div>
 
                 <div class="alert alert-danger text-center text-uppercase" th:if="${param.logout != null}">
                     <p>
-                        <i class="material-icons">&#xE000;</i><strong>Você saiu da aplicação!</strong>
+                        <strong>Você saiu da aplicação!</strong>
                     </p>
                 </div>
 
@@ -40,6 +40,7 @@
 <!--                    <label for="remember-me" class="required">Lembrar de mim:</label>-->
 <!--                    <input id="remember-me" name="remember-me" type="checkbox" class="form-control">-->
 <!--                </div>-->
+
                 <button class="btn btn-primary" title="Entrar">
                     Entrar
                 </button>
