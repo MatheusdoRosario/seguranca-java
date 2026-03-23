@@ -47,4 +47,8 @@ public class Usuario implements UserDetails {
     public String getNome() {
         return nome;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
