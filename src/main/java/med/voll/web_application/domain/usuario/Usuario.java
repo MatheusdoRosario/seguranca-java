@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -31,5 +30,9 @@ public class Usuario implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public String getNome() {
+        return nome;
     }
 }
