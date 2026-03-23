@@ -5,6 +5,7 @@ import med.voll.web_application.domain.RegraDeNegocioException;
 import med.voll.web_application.domain.consulta.ConsultaService;
 import med.voll.web_application.domain.consulta.DadosAgendamentoConsulta;
 import med.voll.web_application.domain.medico.Especialidade;
+import med.voll.web_application.domain.usuario.Perfil;
 import med.voll.web_application.domain.usuario.Usuario;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +21,7 @@ public class ConsultaController {
 
     private static final String PAGINA_LISTAGEM = "consulta/listagem-consultas";
     private static final String PAGINA_CADASTRO = "consulta/formulario-consulta";
+    private static final String PAGINA_ERRO = "erro/500";
     private static final String REDIRECT_LISTAGEM = "redirect:/consultas?sucesso";
 
     private final ConsultaService service;
@@ -41,7 +43,10 @@ public class ConsultaController {
     }
 
     @GetMapping("formulario")
-    public String carregarPaginaAgendaConsulta(Long id, Model model) {
+    public String carregarPaginaAgendaConsulta(Long id, Model model, @AuthenticationPrincipal Usuario logado) {
+        if (logado.getPerfil() == Perfil.MEDICO) {
+            return PAGINA_ERRO;
+        }
         if (id != null) {
             model.addAttribute("dados", service.carregarPorId(id));
         } else {
@@ -52,7 +57,10 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public String cadastrar(@Valid @ModelAttribute("dados") DadosAgendamentoConsulta dados, BindingResult result, Model model) {
+    public String cadastrar(@Valid @ModelAttribute("dados") DadosAgendamentoConsulta dados, BindingResult result, Model model, @AuthenticationPrincipal Usuario logado) {
+        if (logado.getPerfil() == Perfil.MEDICO) {
+            return PAGINA_ERRO;
+        }
         if (result.hasErrors()) {
             model.addAttribute("dados", dados);
             return PAGINA_CADASTRO;
@@ -69,7 +77,7 @@ public class ConsultaController {
     }
 
     @DeleteMapping
-    public String excluir(Long id) {
+    public String excluir(Long id, @AuthenticationPrincipal Usuario logado) {
         service.excluir(id);
         return REDIRECT_LISTAGEM;
     }
