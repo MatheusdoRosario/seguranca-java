@@ -1,10 +1,6 @@
 package med.voll.web_application.domain.usuario;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,12 +17,16 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    private Perfil perfil;
+
     private Usuario(){}
 
-    public Usuario(String nome, String email, String senha) {
+    public Usuario(String nome, String email, String senha, Perfil perfil) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.perfil = perfil;
     }
 
     @Override
@@ -50,5 +50,9 @@ public class Usuario implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public Perfil getPerfil() {
+        return perfil;
     }
 }
