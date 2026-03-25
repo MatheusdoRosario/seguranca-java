@@ -8,6 +8,7 @@ import med.voll.web_application.domain.medico.Especialidade;
 import med.voll.web_application.domain.usuario.Usuario;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,7 @@ public class ConsultaController {
     }
 
     @GetMapping("formulario")
+    @PreAuthorize("hasRole('ATENDENTE') OR hasRole('PACIENTE')")
     public String carregarPaginaAgendaConsulta(Long id, Model model) {
         if (id != null) {
             model.addAttribute("dados", service.carregarPorId(id));
@@ -52,14 +54,15 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public String cadastrar(@Valid @ModelAttribute("dados") DadosAgendamentoConsulta dados, BindingResult result, Model model) {
+    @PreAuthorize("hasRole('ATENDENTE') || hasRole('PACIENTE')")
+    public String cadastrar(@Valid @ModelAttribute("dados") DadosAgendamentoConsulta dados, BindingResult result, Model model, @AuthenticationPrincipal Usuario logado) {
         if (result.hasErrors()) {
             model.addAttribute("dados", dados);
             return PAGINA_CADASTRO;
         }
 
         try {
-            service.cadastrar(dados);
+            service.cadastrar(dados, logado);
             return REDIRECT_LISTAGEM;
         } catch (RegraDeNegocioException e) {
             model.addAttribute("erro", e.getMessage());
