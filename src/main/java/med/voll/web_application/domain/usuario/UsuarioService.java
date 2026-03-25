@@ -1,5 +1,6 @@
 package med.voll.web_application.domain.usuario;
 
+import med.voll.web_application.domain.RegraDeNegocioException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,5 +31,20 @@ public class UsuarioService implements UserDetailsService {
 
     public void excluir(Long id) {
         usuarioRepository.deleteById(id);
+    }
+
+    public void alterarSenha(DadosAlteracaoSenha dados, Usuario logado) {
+        if (!encriptador.matches(dados.senhaAtual(), logado.getPassword())) {
+            throw new RegraDeNegocioException("Senha digitada não confere com a senha atual!");
+        }
+
+        if (!dados.novaSenha().equals(dados.novaSenhaConfirmacao())) {
+            throw new RegraDeNegocioException("Senha e cofirmação não conferem");
+        }
+
+        String senhaCriptografada = encriptador.encode(dados.novaSenha());
+        logado.alterarSenha(senhaCriptografada);
+
+        usuarioRepository.save(logado);
     }
 }
