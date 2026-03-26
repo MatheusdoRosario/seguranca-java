@@ -51,6 +51,32 @@ public class EmailService {
         enviarEmail(usuario.getUsername(), assunto, conteudo);
     }
 
+    public void enviarEmailSenhaAleatoria(Usuario usuario, String senhaAleatoria) {
+        String assunto = "Bem-vindo à Clínica Voll Med | Dados de Acesso ";
+        String conteudo = gerarConteudoBoasVindas("Olá [[name]],<br>"
+                + "Aqui estão suas informações de login <br>"
+                + "<strong>Email:</strong> [[email]] <br>"
+                + "<strong>Senha:</strong> [[senha]] <br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">ACESSAR SUA CONTA</a></h3>"
+                + "Conte com nossa equipe para o que precisar!<br>"
+                + "Obrigado,<br>"
+                + "Clínica Voll Med.", usuario.getNome(), usuario.getUsername(), senhaAleatoria);
+
+        try {
+            enviarEmail(usuario.getUsername(), assunto, conteudo);
+        } catch (RegraDeNegocioException e) {
+            throw new RegraDeNegocioException("Erro ao enviar email para usuário cadastrado!");
+        }
+
+    }
+
+    private String gerarConteudoBoasVindas(String template, String nome, String email, String senhaAleatoria) {
+        return template.replace("[[name]]", nome)
+                .replace("[[email]]", email)
+                .replace("[[senha]]", senhaAleatoria)
+                .replace("[[URL]]", URL_SITE);
+    }
+
     private String gerarConteudoEmail(String template, String nome, String url) {
         return template.replace("[[name]]", nome).replace("[[URL]]", url);
     }
