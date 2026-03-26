@@ -44,6 +44,7 @@ public class UsuarioService implements UserDetailsService {
 
         String senhaCriptografada = encriptador.encode(dados.novaSenha());
         logado.alterarSenha(senhaCriptografada);
+        logado.setSenhaAlterada(true);
 
         usuarioRepository.save(logado);
     }
