@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,10 +24,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ConfiguracoesSeguranca {
 
     @Bean
-    public SecurityFilterChain filtrosSeguranca(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filtrosSeguranca(HttpSecurity http, OncePerRequestFilter filtroAlteracaoSenha) throws Exception {
         return http
                 .authorizeHttpRequests(req -> {
-                        req.requestMatchers("/css/**", "/js/**", "/assets/**", "/", "/index", "/home").permitAll();
+                        req.requestMatchers("/css/**", "/js/**", "/assets/**", "/",
+                                "/index", "/home", "/esqueci-minha-senha", "recuperar-conta").permitAll();
 //                        req.requestMatchers("/pacientes/**").hasRole("ATENDENTE");
 //                        req.requestMatchers(HttpMethod.GET, "/medicos").hasAnyRole("ATENDENTE", "PACIENTE");
 //                        req.requestMatchers("/medicos/**").hasRole("ATENDENTE");
@@ -33,6 +36,7 @@ public class ConfiguracoesSeguranca {
 //                        req.requestMatchers(HttpMethod.PUT, "/consultas/**").hasAnyRole("ATENDENTE", "PACIENTE");
                         req.anyRequest().authenticated();
                     })
+                .addFilterBefore(filtroAlteracaoSenha, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form.loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll())

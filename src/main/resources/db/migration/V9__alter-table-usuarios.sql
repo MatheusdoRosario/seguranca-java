@@ -1,0 +1,2 @@
+ALTER TABLE usuarios
+ADD COLUMN senha_alterada BOOLEAN NOT NULL DEFAULT TRUE;

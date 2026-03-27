@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -18,6 +19,9 @@ public class Usuario implements UserDetails {
     private String nome;
     private String email;
     private String senha;
+    private Boolean senhaAlterada;
+    private String token;
+    private LocalDateTime expiracaoToken;
 
     @Enumerated(EnumType.STRING)
     private Perfil perfil;
@@ -29,6 +33,7 @@ public class Usuario implements UserDetails {
         this.email = email;
         this.senha = senha;
         this.perfil = perfil;
+        this.senhaAlterada = false;
     }
 
     @Override
@@ -56,5 +61,33 @@ public class Usuario implements UserDetails {
 
     public Perfil getPerfil() {
         return perfil;
+    }
+
+    public void alterarSenha(String senhaCriptografada) {
+        this.senha = senhaCriptografada;
+    }
+
+    public Boolean getSenhaAlterada() {
+        return senhaAlterada;
+    }
+
+    public void setSenhaAlterada(Boolean senhaAlterada) {
+        this.senhaAlterada = senhaAlterada;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LocalDateTime getExpiracaoToken() {
+        return expiracaoToken;
+    }
+
+    public void setExpiracaoToken(LocalDateTime expiracaoToken) {
+        this.expiracaoToken = expiracaoToken;
     }
 }

@@ -31,7 +31,7 @@ public class MedicoService {
         }
 
         if (dados.id() == null) {
-            Long id = usuarioService.salvarUsuario(dados.nome(), dados.email(), dados.crm(), Perfil.MEDICO);
+            Long id = usuarioService.salvarUsuario(dados.nome(), dados.email(), Perfil.MEDICO);
             repository.save(new Medico(id, dados));
         } else {
             var medico = repository.findById(dados.id()).orElseThrow();
